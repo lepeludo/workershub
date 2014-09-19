@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.2.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.2.xsd">
+
+
+	<context:component-scan base-package="be.klusjes.dao"></context:component-scan>
+	<context:annotation-config></context:annotation-config>
+	<bean id="dataSource" name="dataSource"
+		class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+			<property name="driverClass" value="com.mysql.jdbc.Driver">
+		</property>
+		<property name="jdbcUrl" value="jdbc:mysql://localhost/bram">
+		</property>
+		<property name="user" value="root"></property>
+		<property name="password" value="4029"></property>
+		<property name="maxIdleTime" value="300"></property>
+
+		<property name="testConnectionOnCheckout" value="true"></property>
+	</bean>
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
+		scope="singleton">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="packagesToScan">
+			<list>
+				<value>be.klusjes.entities</value>
+				<value>be.klusjes.valueobjects</value>
+			</list>
+		</property>
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="showSql" value="true"></property>
+			</bean>
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<constructor-arg ref="entityManagerFactory"></constructor-arg>
+	</bean>
+	<tx:annotation-driven />
+</beans>

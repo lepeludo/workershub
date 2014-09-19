@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:c="http://www.springframework.org/schema/c"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-3.2.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+
+	<!-- <security:authentication-manager> <security:authentication-provider> 
+		<security:jdbc-user-service data-source-ref="dataSource" /> </security:authentication-provider> 
+		</security:authentication-manager> -->
+
+
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<security:password-encoder hash="sha">
+				<security:salt-source user-property="username" />
+			</security:password-encoder>
+			<security:jdbc-user-service
+				data-source-ref="dataSource" />
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+
+	<security:http use-expressions="true" auto-config="true">
+	<security:intercept-url pattern="/**"
+			access="permitAll" />
+		<security:intercept-url pattern="/images/**"
+			access="permitAll" />
+		<security:intercept-url pattern="/styles/**"
+			access="permitAll" />
+		<security:intercept-url pattern="/worker/create"
+			access="permitAll" />
+		<security:intercept-url pattern="/worker/docreate"
+			access="permitAll" />
+		<security:intercept-url pattern="/customer/create"
+			access="permitAll" />
+		<security:intercept-url pattern="/customer/docreate"
+			access="permitAll" />
+		<security:intercept-url pattern="/worker/**"
+			access="hasRole('worker')" />
+		<security:intercept-url pattern="/worker/**"
+			access="hasRole('worker')" />
+		<security:intercept-url pattern="/administrator/**"
+			access="hasRole('administrator')" />
+		<security:intercept-url pattern="/messages/startthread"
+			access="hasAnyRole('worker','customer')" />
+		<security:intercept-url pattern="/messages/**"
+			access="hasAnyRole('worker','customer')" />
+		<security:intercept-url pattern="/jobs/**"
+			access="hasRole('customer')" />
+		<security:logout invalidate-session="true" />
+		<security:form-login login-page="/login"
+			authentication-failure-url="/login?error=true"
+			authentication-success-handler-ref="authSucssessHandler" />
+		<security:logout logout-success-url="/loggedout" />
+	</security:http>
+	<bean id="authSucssessHandler" class="be.klusjes.utils.AuthenticationSuccessHandlerImpl">
+	</bean>
+
+</beans>

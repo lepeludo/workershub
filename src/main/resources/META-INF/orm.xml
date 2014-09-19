@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+http://java.sun.com/xml/ns/persistence/orm_2_0.xsd"
+	version="2.0">
+	<named-query name="findAllCustomers">
+		<query>
+			select c from Customer c
+		</query>
+	</named-query>
+	<named-query name="findAllJobTypes">
+		<query>
+	SELECT j FROM JobType j ORDER BY jobDescription
+	</query>
+	</named-query>
+	<named-query name="findAllLocations">
+		<query>
+	SELECT l FROM Location l ORDER BY country
+	</query>
+	</named-query>
+	<named-query name="findLocationByProvince">
+		<query>
+	SELECT l FROM Location l WHERE province = :province 
+	</query>
+	</named-query>
+	<named-query name="findWorkerByJobTypeAndLocation">
+		<query>	
+			SELECT DISTINCT c FROM Worker c LEFT OUTER JOIN c.jobTypes a LEFT OUTER JOIN c.locations t WHERE a.id IN :jobTypeId AND t.id IN :locationId
+	</query>
+	</named-query>
+	<named-query name="findReviewsByCustomerId">
+		<query>
+		SELECT r FROM Reviews r where r.customer.id = :customerId
+			</query>
+	</named-query>
+	<named-query name="findReviewsByWorkerId">
+		<query>
+		SELECT r FROM Reviews r where r.worker.id = :workerId
+		</query>
+	</named-query>
+	<named-query name="findWorkersByText">
+		<query>
+		SELECT w FROM Worker w WHERE (w.lastName) LIKE (:keyword) OR (w.firstName) LIKE (:keyword) ORDER BY w.lastName
+		</query>
+	</named-query>
+	<named-query name="findCustomersByText">
+		<query>
+		SELECT c FROM Customer c WHERE (c.lastName) LIKE (:keyword) OR (c.firstName) LIKE (:keyword) ORDER BY c.lastName
+		</query>
+	</named-query>
+	<named-query name="findUnreadReportedReviews">
+		<query>
+		SELECT r FROM Reviews r WHERE r.reported = true AND r.readByAdmin = false ORDER BY r.date
+	    </query>
+	</named-query>
+	<named-query name="findAllWorkerEmails">
+		<query>
+		SELECT w.email FROM Worker w
+	    </query>
+	</named-query>
+	<named-query name="findAllCustomerEmails">
+		<query>
+		SELECT c.email FROM Customer c
+	    </query>
+	</named-query>
+	<named-query name="findAllUsernames">
+		<query>
+		SELECT u.username FROM User u
+	    </query>
+	</named-query>
+	<named-query name="readByWorkerAndCustomerId">
+		<query>
+		SELECT m FROM MessageThread m WHERE m.customer.id= :customerId AND m.worker.id= :workerId
+	    </query>
+	</named-query>
+	<named-query name="findMessageThreadByWorkerId">
+		<query>
+		SELECT m FROM MessageThread m WHERE m.worker.id= :workerId
+	    </query>
+	</named-query>
+	<named-query name="findMessagesByMessageThreadIdSortedByTime">
+		<query>
+		SELECT m FROM Message m WHERE m.messageThread.id = :MessageThreadId ORDER BY m.date DESC
+	    </query>
+	</named-query>
+		<named-query name="findMessageThreadByCustomerId">
+		<query>
+		SELECT m FROM MessageThread m WHERE m.customer.id= :customerId
+	    </query>
+	</named-query>
+		<named-query name="findByEmail">
+		<query>
+		SELECT DISTINCT u FROM User u WHERE u.username=:username
+	    </query>
+	</named-query>
+</entity-mappings>
